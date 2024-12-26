@@ -60,7 +60,6 @@ int getSumDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int day, int
 int main() {
     //the programs inputs
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
-    int days[NUM_OF_BRANDS] = {0};
     int choice;
     restartArray(cube);
     
@@ -112,7 +111,7 @@ int main() {
 
             }
             cnt++;
-
+            
 
               break;
 
@@ -130,10 +129,10 @@ int main() {
 
             // checking if the user put the correct input, asking from the user an input 
             //and making the transition from the day the user put to the relevant place in the array
-            while(number1>364 || number1<0)
+            while(number1>=cnt || number1<0)
             {
              printf( "Please enter a valid day.\n");
-             printf( "Which day would you like to analyze?\n");
+             printf( "What day would you like to analyze?\n");
              scanf("%d", &number1);
              number1=number1-1;
             }
@@ -203,19 +202,25 @@ int main() {
 
             case insights:
 
-
+            //printing the first sentence
             printf("The best-selling brand overall is ");
+
+            //calculating the most profitable brand
             findMostProfitableBrand(cube, cnt, brands);
             printf("\n");
 
 
-
+            // printing the second sentence
             printf("The best-selling type of car is ");
+
+            // calculating the most profitable type
             findMostProfitableType(cube, cnt, types);
             printf("\n");
 
-
+            // printing the last sentence
             printf("The most profitable day was day number ");
+            
+            //calculating the most profitable day
             findMostProfitableDay(cube, cnt);
             printf("\n");
             
@@ -228,10 +233,13 @@ int main() {
 
             case deltas:
 
-              
+            //running on the brands array  
             for(int i=0 ; i<5 ; i++)
             {
+              
             printf("Brand: %s, Average Delta: " , brands[i] );
+            
+            //calculating the delta
             getDelta(cube , cnt, i );
              printf("\n");
             }
@@ -266,7 +274,7 @@ int main() {
 
 
 
-
+//this function restarts the array to -1. runnung on every slot in the cube and puting -1 in every place
 void restartArray(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
 {
  for( int i= 0; i<DAYS_IN_YEAR;i++)
@@ -284,6 +292,9 @@ void restartArray(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
     
 }
 
+
+// here we check if the changed array i create is full of number 1. when it full of 1 the brands array stops printing brands.
+//ruuning on the array and checking the value of its slots
 int isfull(int changed[])
 {
   for(int i=0 ; i<5 ; i++)
@@ -296,16 +307,20 @@ int isfull(int changed[])
   return 1;
 }
 
+
+
+// here we fill the cube with inputs that the user enters
 void fillcube(int cube[365][5][4], int number, int  cnt)
  {
   int n1, n2, n3, n4;
 
+//scanning the 4 numbers
   scanf("%d", &n1);
   scanf("%d", &n2);
   scanf("%d", &n3);
   scanf("%d", &n4);
 
-
+// putting the inputs in the current place
   cube[cnt][number][0]=n1;
   cube[cnt][number][1]=n2;
   cube[cnt][number][2]=n3;
@@ -316,26 +331,37 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
 
 
  
-
+// here we print the brands that has not been fed with input
  void printNonCompletedArray(char brands[NUM_OF_BRANDS][BRANDS_NAMES],  int changed[5] )
  {
+
+// running on the changed array  
   for(int i=0; i<NUM_OF_BRANDS; i++)
   {
+// checking if the slot contains 0 or 1    
     if(changed[i]==0)
     {
+// printing the brands that does not contain 1      
      printf("%s ",  brands[i]); 
     }
   }
  }
 
 
+//here we calculate the total sales of cars every day
       int gettotal(int cube[365][5][4] , int  number1)
       {
         int sum=0;
+
+// running on every brand      
         for(int k = 0; k < NUM_OF_BRANDS; k++)
         {
+
+// running on every types          
           for( int j = 0 ; j<NUM_OF_TYPES ;j++)
           {
+
+//sum every sale in that day            
             sum= sum + cube[number1][k][j];
           }
         }
@@ -343,29 +369,40 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
       }          
 
 
+
+//here we return the the number of the sales of the beand that sold the most cars in that day
       int getBSBNum(int cube[365][5][4] , int number1)
       {
         int max=0;
         int sum=0;
 
+//running on the brands 
         for(int i =0 ; i<5; i++)
         {
+
+// running on the types          
           for(int k =0 ; k<4; k++)
           {
+// sum the sales for every brand            
             sum=sum+cube[number1][i][k];
           }
           if (sum>max)
           {
+// checking if the the current brand has more sales than the max            
             max=sum;
           }
+//has to restart the sum for the next brand          
           sum=0;
         }
         return max;
 
       }
 
+
+//here we get the index of the most sold brand to print the brand in the main. the procces is the same as getBSBNum just adding the index and returning it
       int getBSBrand( int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int number1 )
       {
+
 
         int max=0;
         int sum=0;
@@ -388,6 +425,7 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
 
       }
 
+// here we return the most sold type. the process is the same as getBSBNum. just running on the types first and the on the brands
       int  getBTNum( int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int number1)
       {
         int max=0;
@@ -409,7 +447,7 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
 
       }
 
-      
+//here we return the index of the most sold type. the procces is the same as getBSBrand       
         int getBestType(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int number1)
         {
         int max=0;
@@ -434,48 +472,60 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
         }
 
 
-
+// here we get every sale that was sold every day
       void getEverySale(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int cnt,  char types[NUM_OF_TYPES][TYPES_NAMES], int bn ) 
       {
          
+//running on every day         
           for (int i=0 ; i < cnt ; i++)
           {
-            printf("day %d- " , i+1);
+            printf("Day %d- " , i+1);
+
+// running on every type            
             for(int k=0; k< NUM_OF_TYPES ; k++)
             {
              printf("%s: " , types[k]);
              int h=cube[i][bn][k];
-             if(h==0)
-             {
+
+//checking if h=0             
+              if(h==0)
+              {
               printf("x");
               printf(" ");
-             }
-             else
-             {
-              printf("%d" , h);
-              printf(" ");
-             }
+              }
+              else
+              {
+// if h is not 0                
+               printf("%d" , h);
+               printf(" ");
+              }
             }
             printf("\n");
           }
         }
 
 
+//here we find the the most profitable brand 
         void findMostProfitableBrand(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int cnt ,  char brands[NUM_OF_BRANDS][BRANDS_NAMES])
         {
-          int sum1;
+          int sum1 = 0;
           int max1=0;
           int indexmax1=-1;
 
+//running on every day that the user entered input in
             for( int i= 0; i< NUM_OF_BRANDS;i++)
             {
+//then running on every brand              
              for(int k = 0; k < NUM_OF_TYPES ; k++)
-             {  
+             {
+//then running on every type                
               for( int j = 0 ; j< cnt ;j++)
               {
+//sum the sales                
                sum1 += cube[j][i][k];
               }
 
+//checking if there are more sales than the max
              }  
              if (sum1>max1)
              {
@@ -483,6 +533,7 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
                 indexmax1=i;
 
              }
+//restart the sum for the next check             
               sum1=0;
             }
             printf("%s: " ,brands[indexmax1] );
@@ -492,10 +543,11 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
         }
 
 
+//here we do the same check as findMostProfitableBrand just rinning on the types first
         void findMostProfitableType(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int cnt,char types[NUM_OF_TYPES][TYPES_NAMES] )
         {
 
-          int sum2;
+          int sum2 = 0;
           int max2=0;
           int indexmax2=-1;
 
@@ -522,9 +574,10 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
           
         }
 
+//here we do the same check as findMostProfitableBrand just rinning on the days first
         void findMostProfitableDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES], int cnt)
         {
-          int sum3;
+          int sum3 = 0;
           int max3=0;
           int indexmax3=-1;
 
@@ -551,35 +604,44 @@ void fillcube(int cube[365][5][4], int number, int  cnt)
           
         }
         
+//here we calculate the delta of every brand         
         void getDelta( int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int cnt , int  i )
         {
           float delta=0;
           int d1=0;
           int d2=1;
 
+//running until we get to the last day the user enterd data in
           while(d2 < cnt )
           {
+// getting the dum of the current day            
           int sd1 = getSumDay(cube, d1, i);
           int sd2 = getSumDay(cube, d2, i);
-          delta = delta+(sd1-sd2);
+          delta = delta+(sd2 - sd1);
           
           d1++;
           d2++;
           
           
           }
-          delta= delta/cnt;
+//calculating the delta          
+          delta= delta/(cnt - 1);
 
+//returning the delta
             printf("%f", delta);
 
         }
 
+
+//here we get the sum sales of every day
        int getSumDay(int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES] , int day, int i)
        {
 
         int sumd=0;
+//running on the types        
           for(int k=0 ; k<NUM_OF_TYPES ; k++)
           {
+//sum the sales             
             sumd+= cube[day][i][k];
 
           }
